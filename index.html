@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Player (Fahim)</title>
-     
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://vjs.zencdn.net">
@@ -53,12 +54,13 @@
         .video-js .vjs-volume-panel .vjs-volume-control { display: flex !important; align-items: center !important; height: 100% !important; }
         .video-js .vjs-volume-level { background-color: #fff !important; }
         
-        /* Keep PiP */
+        /* Keep PiP and Subtitles Button Visible */
         .video-js .vjs-picture-in-picture-control { display: flex !important; }
+        .video-js .vjs-subs-caps-button { display: flex !important; }
         
         /* HIDDEN BUTTONS (Requested removal) */
         .video-js .vjs-live-control, .video-js .vjs-live-display, .video-js .vjs-remaining-time, .video-js .vjs-time-divider,
-        .video-js .vjs-playback-rate, .video-js .vjs-audio-button, .video-js .vjs-subs-caps-button, .video-js .vjs-chapters-button, .video-js .vjs-descriptions-button { 
+        .video-js .vjs-playback-rate, .video-js .vjs-audio-button, .video-js .vjs-chapters-button, .video-js .vjs-descriptions-button { 
             display: none !important; 
         }
         
@@ -165,47 +167,43 @@
 </button>
 
 <div class="server-box" id="serverBox">
-    <button id="btn-0" class="server-btn badge-hd active" onclick="changeServer('https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783041148~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclDmkNXkDTQQGXnCCjWd5QHkSDMbhqlxjQMXVAkRhhpmNcibqgqbrtrtkAj3Tw2XG3KAUkV2Id5Q4q-XNVHiooUF', 0)">
-        Toffee
-    </button>
-    <button id="btn-1" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/tsports/index.m3u8', 1)">
-        T Sports
-    </button>
-    <button id="btn-2" class="server-btn badge-hd " onclick="changeServer('https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8', 2)">
-        FIFA+
-    </button>
-    <button id="btn-3" class="server-btn badge-4k " onclick="changeServer('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 3)">
-        IRIB 4K
-    </button>
-    <button id="btn-4" class="server-btn badge-hd " onclick="changeServer('http://proxpanel.cc/h1wqD6CY/byxHYgX/707929', 4)">
-        beIN Sports 1
-    </button>
-    <button id="btn-5" class="server-btn badge-hd " onclick="changeServer('https://fx.cinecdn.workers.dev/', 5)">
-        Fox
-    </button>
-    <button id="btn-6" class="server-btn badge-hd " onclick="changeServer('https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8', 6)">
-        Telemundo
-    </button>
-     <button id="btn-7" class="server-btn badge-hd " onclick="changeServer('https://cdn-tt.pages.dev/ch1.m3u8', 7)">
-        Toffee 1
-    </button>
-    <button id="btn-8" class="server-btn badge-hd " onclick="changeServer('https://cdn-tt.pages.dev/ch2.m3u8', 8)">
-        Toffee 2
-    </button>
-    <button id="btn-9" class="server-btn badge-hd " onclick="changeServer('https://cdn-tt.pages.dev/ch3.m3u8', 9)">
-        Toffee 3
-    </button>
-    <button id="btn-10" class="server-btn badge-hd " onclick="changeServer('https://cdn-tt.pages.dev/ch4.m3u8', 10)">
-        Toffee 4
-    </button>
-    <button id="btn-11" class="server-btn badge-hd " onclick="changeServer('https://cdn-tt.pages.dev/ch5.m3u8', 11)">
-        Toffee 5
-    </button>
+    <button id="btn-0" class="server-btn badge-hd active" onclick="changeServer('https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM', 0)">Toffee</button>
+    <button id="btn-1" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/tsports/index.m3u8', 1)">T Sports</button>
+    <button id="btn-2" class="server-btn badge-hd " onclick="changeServer('https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8', 2)">FIFA+</button>
+    <button id="btn-3" class="server-btn badge-4k " onclick="changeServer('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 3)">IRIB 4K</button>
+    <button id="btn-4" class="server-btn badge-hd " onclick="changeServer('https://d1jzu95oc8fgt3.cloudfront.net/FOX_Sports.m3u8', 4)">FOX Sports</button>
+    <button id="btn-5" class="server-btn badge-hd " onclick="changeServer('https://ranapkbd.site/JOIN@RANAPK33/play.m3u8?id=373312', 5)">United Sports 8</button>
+    <button id="btn-6" class="server-btn badge-hd " onclick="changeServer('https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8', 6)">D Sports</button>
+    <button id="btn-7" class="server-btn badge-hd " onclick="changeServer('https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8', 7)">TyC Sports</button>
+    <button id="btn-8" class="server-btn badge-hd " onclick="changeServer('https://nomawnoijl.gpcdn.net/akash/thunder/playlist.m3u8', 8)">Thunder</button>
+    <button id="btn-9" class="server-btn badge-hd " onclick="changeServer('https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8', 9)">Telemundo</button>
+    <button id="btn-10" class="server-btn badge-hd " onclick="changeServer('https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8', 10)">beIN Sports 1</button>
+    <button id="btn-11" class="server-btn badge-hd " onclick="changeServer('https://bein-esp-xumo.amagi.tv/playlist.m3u8', 11)">beIN Sports Xtra</button>
+    <button id="btn-12" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8', 12)">Jamuna TV</button>
+    <button id="btn-13" class="server-btn badge-hd " onclick="changeServer('https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8', 13)">Somoy</button>
+    <button id="btn-14" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8', 14)">Independent TV</button>
+    <button id="btn-15" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8', 15)">Channel 24 HD</button>
+    <button id="btn-16" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8', 16)">Ekattor HD</button>
+    <button id="btn-17" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8', 17)">DBC News HD</button>
+    <button id="btn-18" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8', 18)">Channel I HD</button>
+    <button id="btn-19" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8', 19)">Channel 9 HD</button>
+    <button id="btn-20" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8', 20)">NTV</button>
+    <button id="btn-21" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8', 21)">Maasranga TV</button>
+    <button id="btn-22" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8', 22)">ATN News</button>
+    <button id="btn-23" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8', 23)">News 24 HD</button>
+    <button id="btn-24" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8', 24)">Channel 1</button>
+    <button id="btn-25" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8', 25)">Star News</button>
+    <button id="btn-26" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8', 26)">Deepto TV HD</button>
+    <button id="btn-27" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8', 27)">Desh TV</button>
+    <button id="btn-28" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8', 28)">Bangla Vision</button>
+    <button id="btn-29" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 29)">BTV</button>
+    <button id="btn-30" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 30)">BTV Shangshad</button>
+    <button id="btn-31" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8', 31)">Al Jazeera</button>
 </div>
 
 <div id="vjs-wrapper">
     <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls autoplay muted playsinline preload="metadata">
-        <source src="https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783041148~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclDmkNXkDTQQGXnCCjWd5QHkSDMbhqlxjQMXVAkRhhpmNcibqgqbrtrtkAj3Tw2XG3KAUkV2Id5Q4q-XNVHiooUF" type="application/x-mpegURL">
+        <source src="https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM" type="application/x-mpegURL">
     </video>
 </div>
 
@@ -215,7 +213,6 @@
 
 <script defer src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
-<!-- Official Video.js Quality Levels Plugin (Reads the stream data) -->
 <script defer src="https://unpkg.com/videojs-contrib-quality-levels@2.1.1/dist/videojs-contrib-quality-levels.min.js"></script>
 
 <script defer src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -353,18 +350,38 @@
         // =========================================================================
 
         var serverList = [
-            "https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783041148~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclDmkNXkDTQQGXnCCjWd5QHkSDMbhqlxjQMXVAkRhhpmNcibqgqbrtrtkAj3Tw2XG3KAUkV2Id5Q4q-XNVHiooUF",
+            "https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM",
             "http://198.195.239.50:8095/tsports/index.m3u8",
             "https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8",
             "https://ncdn.telewebion.ir/faratar/live/playlist.m3u8",
-            "http://proxpanel.cc/h1wqD6CY/byxHYgX/707929",
-            "https://fx.cinecdn.workers.dev/",
+            "https://d1jzu95oc8fgt3.cloudfront.net/FOX_Sports.m3u8",
+            "https://ranapkbd.site/JOIN@RANAPK33/play.m3u8?id=373312",
+            "https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8",
+            "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8",
+            "https://nomawnoijl.gpcdn.net/akash/thunder/playlist.m3u8",
             "https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8",
-            "https://cdn-tt.pages.dev/ch1.m3u8",
-            "https://cdn-tt.pages.dev/ch2.m3u8",
-            "https://cdn-tt.pages.dev/ch3.m3u8",
-            "https://cdn-tt.pages.dev/ch4.m3u8",
-            "https://cdn-tt.pages.dev/ch5.m3u8",
+            "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+            "https://bein-esp-xumo.amagi.tv/playlist.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8",
+            "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8",
+            "http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8"
         ];
         
         var currentServerIndex=0, isSwitching=!1;
@@ -377,6 +394,7 @@
                     'playToggle',
                     'volumePanel',
                     'progressControl',
+                    'subsCapsButton', // Added CC/Caption Button
                     'customQualitySelector', // Settings Gear Icon
                     'pictureInPictureToggle',
                     'fullscreenToggle'
@@ -398,7 +416,7 @@
             var t=document.getElementById('btn-'+n);
             if(t) t.classList.add('active');
 
-            if (n < 7) {
+            if (n < 32) {
                 document.getElementById('fluid-wrapper').style.display = 'none';
                 document.getElementById('vjs-wrapper').style.display = 'block';
                 var fplayer = document.getElementById('fluid-player');
