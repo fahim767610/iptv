@@ -37,7 +37,7 @@
             transform: translateX(-50%) !important;
             width: calc(100% - 60px) !important;
             max-width: 850px !important;
-            height: 56px !important;
+            height: 60px !important; /* Slightly taller to accommodate larger buttons */
             display: flex !important;
             align-items: center !important;
             padding: 0 15px !important;
@@ -46,9 +46,10 @@
         }
         .fluid_controls_container { padding: 0 10px; display: block !important; }
         
-        .video-js .vjs-button { width: 40px !important; height: 40px !important; display: flex !important; align-items: center !important; justify-content: center !important; border-radius: 50% !important; margin: 0 3px !important; transition: all .2s ease; background: 0 0 !important; }
+        /* Increased button sizes to match settings gear */
+        .video-js .vjs-button { width: 46px !important; height: 46px !important; display: flex !important; align-items: center !important; justify-content: center !important; border-radius: 50% !important; margin: 0 4px !important; transition: all .2s ease; background: 0 0 !important; }
         .video-js .vjs-button:hover { background: rgba(255, 255, 255, 0.15) !important; }
-        .video-js .vjs-icon-placeholder:before { font-size: 1.5em !important; line-height: 1 !important; display: flex; align-items: center; justify-content: center; }
+        .video-js .vjs-icon-placeholder:before { font-size: 1.8em !important; line-height: 1 !important; display: flex; align-items: center; justify-content: center; }
         
         .video-js .vjs-volume-panel { display: flex !important; align-items: center !important; width: auto !important; }
         .video-js .vjs-volume-panel .vjs-volume-control { display: flex !important; align-items: center !important; height: 100% !important; }
@@ -58,7 +59,7 @@
         .video-js .vjs-picture-in-picture-control { display: flex !important; }
         .video-js .vjs-subs-caps-button { display: flex !important; }
         
-        /* HIDDEN BUTTONS (Requested removal) */
+        /* HIDDEN BUTTONS */
         .video-js .vjs-live-control, .video-js .vjs-live-display, .video-js .vjs-remaining-time, .video-js .vjs-time-divider,
         .video-js .vjs-playback-rate, .video-js .vjs-audio-button, .video-js .vjs-chapters-button, .video-js .vjs-descriptions-button { 
             display: none !important; 
@@ -72,16 +73,36 @@
         .video-js .vjs-load-progress { background: rgba(255,255,255,0.1) !important; border-radius: 4px; }
         .video-js .vjs-load-progress div { background: rgba(255,255,255,0.15) !important; border-radius: 4px; }
 
+        /* --- CLOCK COMPONENT STYLING --- */
+        .vjs-custom-clock {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ffaa; /* Neon green */
+            background: rgba(0, 20, 10, 0.7); /* Dark pill background */
+            border: 1px solid #005533; /* Dark green stroke */
+            border-radius: 20px;
+            padding: 0 16px;
+            margin: 0 8px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+            height: 36px;
+            box-shadow: inset 0 0 8px rgba(0,255,170,0.1);
+        }
+
         /* --- QUALITY COMPONENT STYLING (SETTINGS ICON) --- */
         .vjs-custom-quality-selector { display: flex !important; }
         
-        /* New custom SVG Settings/Gear Icon */
+        /* Scaled SVG Settings/Gear Icon */
         .video-js .vjs-custom-quality-selector .vjs-icon-placeholder::before {
             content: "";
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 22px;
+            background-size: 26px; /* Increased size to match 1.8em default icons */
             width: 100%;
             height: 100%;
             display: block;
@@ -151,8 +172,12 @@
         /* Mobile Adjustments */
         @media (max-width:768px){
             .video-js .vjs-control-bar, .fluid_controls_container {width:96%!important;bottom:15px!important;height:48px!important;padding:0 5px!important}
-            .video-js .vjs-button{width:30px!important;height:30px!important;margin:0 2px!important}
-            .video-js .vjs-icon-placeholder:before{font-size:1.3em!important; background-size: 18px;}
+            .video-js .vjs-button{width:32px!important;height:32px!important;margin:0 2px!important}
+            .video-js .vjs-icon-placeholder:before{font-size:1.4em!important;}
+            .video-js .vjs-custom-quality-selector .vjs-icon-placeholder::before { background-size: 20px;}
+            
+            .vjs-custom-clock { font-size: 11px; padding: 0 8px; margin: 0 4px; height: 28px; letter-spacing: 0.5px; }
+
             .server-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; }
             .server-box { top: 70px; right: 15px; width: 110px; padding: 15px 10px; max-height: calc(100vh - 140px); }
         }
@@ -179,26 +204,37 @@
     <button id="btn-9" class="server-btn badge-hd " onclick="changeServer('https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8', 9)">Telemundo</button>
     <button id="btn-10" class="server-btn badge-hd " onclick="changeServer('https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8', 10)">beIN Sports 1</button>
     <button id="btn-11" class="server-btn badge-hd " onclick="changeServer('https://bein-esp-xumo.amagi.tv/playlist.m3u8', 11)">beIN Sports Xtra</button>
-    <button id="btn-12" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8', 12)">Jamuna TV</button>
-    <button id="btn-13" class="server-btn badge-hd " onclick="changeServer('https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8', 13)">Somoy</button>
-    <button id="btn-14" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8', 14)">Independent TV</button>
-    <button id="btn-15" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8', 15)">Channel 24 HD</button>
-    <button id="btn-16" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8', 16)">Ekattor HD</button>
-    <button id="btn-17" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8', 17)">DBC News HD</button>
-    <button id="btn-18" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8', 18)">Channel I HD</button>
-    <button id="btn-19" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8', 19)">Channel 9 HD</button>
-    <button id="btn-20" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8', 20)">NTV</button>
-    <button id="btn-21" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8', 21)">Maasranga TV</button>
-    <button id="btn-22" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8', 22)">ATN News</button>
-    <button id="btn-23" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8', 23)">News 24 HD</button>
-    <button id="btn-24" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8', 24)">Channel 1</button>
-    <button id="btn-25" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8', 25)">Star News</button>
-    <button id="btn-26" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8', 26)">Deepto TV HD</button>
-    <button id="btn-27" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8', 27)">Desh TV</button>
-    <button id="btn-28" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8', 28)">Bangla Vision</button>
-    <button id="btn-29" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 29)">BTV</button>
-    <button id="btn-30" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 30)">BTV Shangshad</button>
-    <button id="btn-31" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8', 31)">Al Jazeera</button>
+    <button id="btn-12" class="server-btn badge-4k " onclick="changeServer('http://fastshare1.com/live/25711345/late8airline/745270.ts', 12)">NOW 4K</button>
+    <button id="btn-13" class="server-btn badge-hd " onclick="changeServer('https://next.badinan.xyz/nexttv/FHD/playlist.m3u8', 13)">next</button>
+    <button id="btn-14" class="server-btn badge-hd " onclick="changeServer('https://kazimmt.ami.bd/playlist/TF/TF-1.m3u8', 14)">Toffee (Alt)</button>
+    <button id="btn-15" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 15)">T Sports (Alt)</button>
+    <button id="btn-16" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/ptv/tracks-v1a1/mono.m3u8', 16)">PTV</button>
+    <button id="btn-17" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/unt-s/video.m3u8', 17)">SUN</button>
+    <button id="btn-18" class="server-btn badge-hd " onclick="changeServer('http://fastshare1.com/live/25711345/late8airline/741567.ts', 18)">Unite 8 Sports 1</button>
+    <button id="btn-19" class="server-btn badge-hd " onclick="changeServer('http://66.102.126.10:8000/play/a018/index.m3u8', 19)">Unite 8 Sports 2</button>
+    <button id="btn-20" class="server-btn badge-hd " onclick="changeServer('http://fastshare1.com/live/25711345/late8airline/751354.ts', 20)">FS1</button>
+    <button id="btn-21" class="server-btn badge-hd " onclick="changeServer('http://fastshare1.com/live/25711345/late8airline/742610.ts', 21)">Fussball TV 1</button>
+    <button id="btn-22" class="server-btn badge-hd " onclick="changeServer('http://fastshare1.com/live/25711345/late8airline/742611.ts', 22)">Fussball TV 2</button>
+    <button id="btn-23" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8', 23)">Jamuna TV</button>
+    <button id="btn-24" class="server-btn badge-hd " onclick="changeServer('https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8', 24)">Somoy</button>
+    <button id="btn-25" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8', 25)">Independent TV</button>
+    <button id="btn-26" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8', 26)">Channel 24 HD</button>
+    <button id="btn-27" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8', 27)">Ekattor HD</button>
+    <button id="btn-28" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8', 28)">DBC News HD</button>
+    <button id="btn-29" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8', 29)">Channel I HD</button>
+    <button id="btn-30" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8', 30)">Channel 9 HD</button>
+    <button id="btn-31" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8', 31)">NTV</button>
+    <button id="btn-32" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8', 32)">Maasranga TV</button>
+    <button id="btn-33" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8', 33)">ATN News</button>
+    <button id="btn-34" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8', 34)">News 24 HD</button>
+    <button id="btn-35" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8', 35)">Channel 1</button>
+    <button id="btn-36" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8', 36)">Star News</button>
+    <button id="btn-37" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8', 37)">Deepto TV HD</button>
+    <button id="btn-38" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8', 38)">Desh TV</button>
+    <button id="btn-39" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8', 39)">Bangla Vision</button>
+    <button id="btn-40" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 40)">BTV</button>
+    <button id="btn-41" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 41)">BTV Shangshad</button>
+    <button id="btn-42" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8', 42)">Al Jazeera</button>
 </div>
 
 <div id="vjs-wrapper">
@@ -212,9 +248,7 @@
 </div>
 
 <script defer src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-
 <script defer src="https://unpkg.com/videojs-contrib-quality-levels@2.1.1/dist/videojs-contrib-quality-levels.min.js"></script>
-
 <script defer src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script defer src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
@@ -268,12 +302,44 @@
     window.addEventListener('load', function() {
         
         // =========================================================================
-        // REAL QUALITY SELECTOR COMPONENT (YOUTUBE STYLE)
+        // CUSTOM COMPONENTS (CLOCK & QUALITY SELECTOR)
         // =========================================================================
         if(typeof videojs !== 'undefined') {
+            const Component = videojs.getComponent('Component');
             const MenuButton = videojs.getComponent('MenuButton');
             const MenuItem = videojs.getComponent('MenuItem');
 
+            // --- Custom Digital Clock Component ---
+            class CustomClock extends Component {
+                constructor(player, options) {
+                    super(player, options);
+                    this.updateTime();
+                    setInterval(() => this.updateTime(), 1000);
+                }
+                updateTime() {
+                    const now = new Date();
+                    let hours = now.getHours();
+                    let minutes = now.getMinutes();
+                    let seconds = now.getSeconds();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // 0 should be 12
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
+                    hours = hours < 10 ? '0' + hours : hours;
+                    const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+                    this.el().innerText = timeString;
+                }
+                createEl() {
+                    return videojs.dom.createEl('div', {
+                        className: 'vjs-custom-clock'
+                    });
+                }
+            }
+            videojs.registerComponent('CustomClock', CustomClock);
+
+
+            // --- Quality Selector Component ---
             class QualityMenuItem extends MenuItem {
                 constructor(player, options) {
                     super(player, options);
@@ -362,6 +428,17 @@
             "https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8",
             "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
             "https://bein-esp-xumo.amagi.tv/playlist.m3u8",
+            "http://fastshare1.com/live/25711345/late8airline/745270.ts",
+            "https://next.badinan.xyz/nexttv/FHD/playlist.m3u8",
+            "https://kazimmt.ami.bd/playlist/TF/TF-1.m3u8",
+            "http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8",
+            "http://198.195.239.50:8095/ptv/tracks-v1a1/mono.m3u8",
+            "http://198.195.239.50:8095/unt-s/video.m3u8",
+            "http://fastshare1.com/live/25711345/late8airline/741567.ts",
+            "http://66.102.126.10:8000/play/a018/index.m3u8",
+            "http://fastshare1.com/live/25711345/late8airline/751354.ts",
+            "http://fastshare1.com/live/25711345/late8airline/742610.ts",
+            "http://fastshare1.com/live/25711345/late8airline/742611.ts",
             "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8",
             "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
             "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8",
@@ -394,7 +471,8 @@
                     'playToggle',
                     'volumePanel',
                     'progressControl',
-                    'subsCapsButton', // Added CC/Caption Button
+                    'customClock',           // Custom Live Clock Component
+                    'subsCapsButton',        // CC/Caption Button
                     'customQualitySelector', // Settings Gear Icon
                     'pictureInPictureToggle',
                     'fullscreenToggle'
@@ -416,7 +494,7 @@
             var t=document.getElementById('btn-'+n);
             if(t) t.classList.add('active');
 
-            if (n < 32) {
+            if (n < 43) {
                 document.getElementById('fluid-wrapper').style.display = 'none';
                 document.getElementById('vjs-wrapper').style.display = 'block';
                 var fplayer = document.getElementById('fluid-player');
