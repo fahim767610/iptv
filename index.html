@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Player (Fahim)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://vjs.zencdn.net">
+    <link rel="preconnect" href="https://cdn.fluidplayer.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
+    
+    <style>
+        body,html{margin:0;padding:0;width:100%;height:100%;background-color:#050505;overflow:hidden;font-family:'Hind Siliguri','Inter',sans-serif;color:#fff}
+        
+        #vjs-wrapper, #fluid-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #fluid-wrapper { display: none; background: #000; z-index: 1; }
+        #vjs-wrapper { z-index: 2; }
+        
+        .fluid_video_wrapper { width: 100% !important; height: 100% !important; }
+        .video-js{width:100%!important;height:100%!important;background-color:transparent}
+        
+        /* Control Bar styling - Glassmorphic */
+        .video-js .vjs-control-bar, .fluid_controls_container {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px !important;
+            bottom: 30px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100% - 60px) !important;
+            max-width: 850px !important;
+            height: 60px !important; 
+            display: flex !important;
+            align-items: center !important;
+            padding: 0 15px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            transition: opacity .4s ease, transform .4s ease;
+        }
+        .fluid_controls_container { padding: 0 10px; display: block !important; }
+        
+        .video-js .vjs-button { width: 46px !important; height: 46px !important; display: flex !important; align-items: center !important; justify-content: center !important; border-radius: 50% !important; margin: 0 4px !important; transition: all .2s ease; background: 0 0 !important; }
+        .video-js .vjs-button:hover { background: rgba(255, 255, 255, 0.15) !important; }
+        .video-js .vjs-icon-placeholder:before { font-size: 1.8em !important; line-height: 1 !important; display: flex; align-items: center; justify-content: center; }
+        
+        .video-js .vjs-volume-panel { display: flex !important; align-items: center !important; width: auto !important; }
+        .video-js .vjs-volume-panel .vjs-volume-control { display: flex !important; align-items: center !important; height: 100% !important; }
+        .video-js .vjs-volume-level { background-color: #fff !important; }
+        
+        .video-js .vjs-picture-in-picture-control { display: flex !important; }
+        .video-js .vjs-subs-caps-button { display: flex !important; }
+        
+        /* HIDDEN BUTTONS */
+        .video-js .vjs-live-control, .video-js .vjs-live-display, .video-js .vjs-remaining-time, .video-js .vjs-time-divider,
+        .video-js .vjs-playback-rate, .video-js .vjs-audio-button, .video-js .vjs-chapters-button, .video-js .vjs-descriptions-button { 
+            display: none !important; 
+        }
+        
+        .video-js .vjs-progress-control { display: flex !important; flex: auto; align-items: center; margin: 0 10px; }
+        .video-js .vjs-progress-holder { height: 6px; border-radius: 4px; background: rgba(255,255,255,0.2); }
+        .video-js .vjs-play-progress { background-color: rgba(255,255,255,0.9); border-radius: 4px; }
+        .video-js .vjs-play-progress:before { font-size: 14px; top: -4px; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .video-js .vjs-load-progress { background: rgba(255,255,255,0.1) !important; border-radius: 4px; }
+        .video-js .vjs-load-progress div { background: rgba(255,255,255,0.15) !important; border-radius: 4px; }
+
+        /* --- CLOCK COMPONENT STYLING --- */
+        .vjs-custom-clock {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ffaa; 
+            background: rgba(0, 20, 10, 0.7); 
+            border: 1px solid #005533; 
+            border-radius: 20px;
+            padding: 0 16px;
+            margin: 0 8px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+            height: 36px;
+            box-shadow: inset 0 0 8px rgba(0,255,170,0.1);
+        }
+
+        /* --- QUALITY COMPONENT STYLING (SETTINGS ICON) --- */
+        .vjs-custom-quality-selector { display: flex !important; }
+        
+        .video-js .vjs-custom-quality-selector .vjs-icon-placeholder::before {
+            content: "";
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 26px; 
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .video-js .vjs-custom-quality-selector .vjs-menu { z-index: 10000; bottom: 15px; margin-bottom: 10px; }
+        .video-js .vjs-custom-quality-selector .vjs-menu-content { 
+            background: rgba(15, 15, 15, 0.9) !important; 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px !important; padding: 6px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100px;
+        }
+        .video-js .vjs-custom-quality-selector .vjs-menu-item { 
+            border-radius: 8px; margin: 2px 0; transition: 0.2s; font-family: 'Inter', sans-serif; 
+            font-weight: 600; text-transform: uppercase; font-size: 13px; text-align: center;
+        }
+        .video-js .vjs-custom-quality-selector .vjs-menu-item:hover, 
+        .video-js .vjs-custom-quality-selector .vjs-menu-item:focus { background: rgba(255,255,255,0.15) !important; }
+        
+        .video-js .vjs-custom-quality-selector .vjs-menu-item.vjs-selected { background: rgba(255, 255, 255, 0.25) !important; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+
+        .server-toggle-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 10000;
+            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .server-toggle-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
+
+        .server-box {
+            position: absolute; right: 20px; top: 80px; z-index: 9999; 
+            display: flex; gap: 12px; flex-direction: column; align-items: stretch;
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 20px 15px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,.3);
+            max-height: calc(100vh - 180px); overflow-y: auto; overflow-x: hidden; width: 130px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1; visibility: visible;
+        }
+        .server-box.hidden { transform: translateX(150%); opacity: 0; visibility: hidden; }
+        
+        .server-box::-webkit-scrollbar { width: 4px; }
+        .server-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        .server-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+        
+        body.is-idle .server-toggle-btn,
+        body.is-idle .server-box {
+            opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        :fullscreen .server-box, :-webkit-full-screen .server-box, 
+        :fullscreen .server-toggle-btn, :-webkit-full-screen .server-toggle-btn { display: none !important; }
+
+        .server-btn{background:0 0;color:#ccc;padding:10px 8px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;border:none;position:relative;width:100%;text-align:center;}
+        .server-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+        .server-btn.active{background:rgba(255,255,255,0.2);color:#fff;box-shadow:0 4px 15px rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.4); font-weight:700}
+        
+        .badge-hd::after { content: 'HD'; position: absolute; top: -6px; right: -4px; background: #00d2ff; color: #000; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .badge-4k::after { content: '4K'; position: absolute; top: -6px; right: -4px; background: #FFD700; color: #000; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 8px; box-shadow: 0 2px 5px rgba(255,215,0,0.5); }
+
+        @media (max-width:768px){
+            .video-js .vjs-control-bar, .fluid_controls_container {width:96%!important;bottom:15px!important;height:48px!important;padding:0 5px!important}
+            .video-js .vjs-button{width:32px!important;height:32px!important;margin:0 2px!important}
+            .video-js .vjs-icon-placeholder:before{font-size:1.4em!important;}
+            .video-js .vjs-custom-quality-selector .vjs-icon-placeholder::before { background-size: 20px;}
+            
+            .vjs-custom-clock { font-size: 11px; padding: 0 8px; margin: 0 4px; height: 28px; letter-spacing: 0.5px; }
+
+            .server-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; }
+            .server-box { top: 70px; right: 15px; width: 110px; padding: 15px 10px; max-height: calc(100vh - 140px); }
+        }
+    </style>
+</head>
+<body>
+
+<button id="serverToggleBtn" class="server-toggle-btn" onclick="toggleServerList()" aria-label="Toggle Server List">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+    </svg>
+</button>
+
+<div class="server-box" id="serverBox">
+    <button id="btn-0" class="server-btn badge-hd active" onclick="changeServer('https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM', 0)">Toffee</button>
+    <button id="btn-1" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/tsports/index.m3u8', 1)">T Sports</button>
+    <button id="btn-2" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 2)">T Sports</button>
+    <button id="btn-3" class="server-btn badge-hd " onclick="changeServer('https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8', 3)">FIFA+</button>
+    <button id="btn-4" class="server-btn badge-4k " onclick="changeServer('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 4)">IRIB 4K</button>
+    <button id="btn-5" class="server-btn badge-hd " onclick="changeServer('https://d1jzu95oc8fgt3.cloudfront.net/FOX_Sports.m3u8', 5)">FOX Sports</button>
+    <button id="btn-6" class="server-btn badge-hd " onclick="changeServer('https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8', 6)">D Sports</button>
+    <button id="btn-7" class="server-btn badge-hd " onclick="changeServer('https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8', 7)">TyC Sports</button>
+    <button id="btn-8" class="server-btn badge-hd " onclick="changeServer('https://nomawnoijl.gpcdn.net/akash/thunder/playlist.m3u8', 8)">Thunder</button>
+    <button id="btn-9" class="server-btn badge-hd " onclick="changeServer('https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8', 9)">Telemundo</button>
+    <button id="btn-10" class="server-btn badge-hd " onclick="changeServer('https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8', 10)">beIN Sports 1</button>
+    <button id="btn-11" class="server-btn badge-hd " onclick="changeServer('https://bein-esp-xumo.amagi.tv/playlist.m3u8', 11)">beIN Sports Xtra</button>
+    <button id="btn-12" class="server-btn badge-hd " onclick="changeServer('https://next.badinan.xyz/nexttv/FHD/playlist.m3u8', 12)">Next</button>
+    <button id="btn-13" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/ptv/tracks-v1a1/mono.m3u8', 13)">PTV</button>
+    <button id="btn-14" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/unt-s/video.m3u8', 14)">SUN</button>
+    <button id="btn-15" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8', 15)">Jamuna TV</button>
+    <button id="btn-16" class="server-btn badge-hd " onclick="changeServer('https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8', 16)">Somoy</button>
+    <button id="btn-17" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8', 17)">Independent TV</button>
+    <button id="btn-18" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8', 18)">Channel 24 HD</button>
+    <button id="btn-19" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8', 19)">Ekattor HD</button>
+    <button id="btn-20" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8', 20)">DBC News HD</button>
+    <button id="btn-21" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8', 21)">Channel I HD</button>
+    <button id="btn-22" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8', 22)">Channel 9 HD</button>
+    <button id="btn-23" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8', 23)">NTV</button>
+    <button id="btn-24" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8', 24)">Maasranga TV</button>
+    <button id="btn-25" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8', 25)">ATN News</button>
+    <button id="btn-26" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8', 26)">News 24 HD</button>
+    <button id="btn-27" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8', 27)">Channel 1</button>
+    <button id="btn-28" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8', 28)">Star News</button>
+    <button id="btn-29" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8', 29)">Deepto TV HD</button>
+    <button id="btn-30" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8', 30)">Desh TV</button>
+    <button id="btn-31" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8', 31)">Bangla Vision</button>
+    <button id="btn-32" class="server-btn badge-hd " onclick="changeServer('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 32)">BTV</button>
+    <button id="btn-33" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 33)">BTV Shangshad</button>
+    <button id="btn-34" class="server-btn badge-hd " onclick="changeServer('https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8', 34)">Al Jazeera</button>
+</div>
+
+<div id="vjs-wrapper">
+    <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls autoplay muted playsinline preload="metadata">
+        <source src="https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM" type="application/x-mpegURL">
+    </video>
+</div>
+
+<div id="fluid-wrapper">
+    <video id="fluid-player" controls autoplay muted playsinline></video>
+</div>
+
+<script defer src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script defer src="https://unpkg.com/videojs-contrib-quality-levels@2.1.1/dist/videojs-contrib-quality-levels.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script defer src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+
+<script defer>
+    let uiIdleTimer;
+    function resetUIIdleTimer() {
+        document.body.classList.remove('is-idle');
+        clearTimeout(uiIdleTimer);
+        uiIdleTimer = setTimeout(() => { document.body.classList.add('is-idle'); }, 3500); 
+    }
+    ['mousemove', 'mousedown', 'touchstart', 'click', 'keydown'].forEach(evt => {
+        document.addEventListener(evt, resetUIIdleTimer, true);
+    });
+    resetUIIdleTimer(); 
+
+    const nukePage=()=>{document.body.innerHTML='',document.body.style.backgroundColor='black',document.head.innerHTML=''};
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{if(123===e.keyCode||(e.ctrlKey&&e.shiftKey&&(73===e.keyCode||74===e.keyCode||67===e.keyCode))||(e.ctrlKey&&85===e.keyCode))e.preventDefault(),nukePage()});
+    setInterval(()=>{const e=performance.now();debugger;performance.now()-e>100&&nukePage()},500);
+    window.addEventListener('resize',()=>{const e=window.outerWidth-window.innerWidth,n=window.outerHeight-window.innerHeight;(e>160||n>160)&&nukePage()});
+    const devtoolsDetector=new Image;Object.defineProperty(devtoolsDetector,'id',{get:function(){nukePage()}});console.log('%c',devtoolsDetector);
+
+    function toggleServerList() {
+        const serverBox = document.getElementById('serverBox');
+        if (serverBox) serverBox.classList.toggle('hidden');
+    }
+
+    var hlsFluid = null;
+    var fluidPlayerInstance = null;
+
+    function initFluidPlayer(url) {
+        if(!fluidPlayerInstance) {
+            fluidPlayerInstance = fluidPlayer('fluid-player', {
+                layoutControls: { fillToContainer: true, primaryColor: "#ffffff", autoPlay: true, mute: true, controlBar: { autoHide: true } }
+            });
+        }
+        var videoEl = document.getElementById('fluid-player');
+        if (Hls.isSupported()) {
+            if(hlsFluid) hlsFluid.destroy();
+            hlsFluid = new Hls({maxBufferLength: 30});
+            hlsFluid.loadSource(url);
+            hlsFluid.attachMedia(videoEl);
+            hlsFluid.on(Hls.Events.MANIFEST_PARSED, function() { videoEl.play().catch(e=>console.log(e)); });
+        } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+            videoEl.src = url;
+            videoEl.play();
+        }
+    }
+
+    window.addEventListener('load', function() {
+        
+        if(typeof videojs !== 'undefined') {
+            const Component = videojs.getComponent('Component');
+            const MenuButton = videojs.getComponent('MenuButton');
+            const MenuItem = videojs.getComponent('MenuItem');
+
+            class CustomClock extends Component {
+                constructor(player, options) {
+                    super(player, options);
+                    this.updateTime();
+                    setInterval(() => this.updateTime(), 1000);
+                }
+                updateTime() {
+                    const now = new Date();
+                    let hours = now.getHours();
+                    let minutes = now.getMinutes();
+                    let seconds = now.getSeconds();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; 
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
+                    hours = hours < 10 ? '0' + hours : hours;
+                    const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+                    this.el().innerText = timeString;
+                }
+                createEl() {
+                    return videojs.dom.createEl('div', {
+                        className: 'vjs-custom-clock'
+                    });
+                }
+            }
+            videojs.registerComponent('CustomClock', CustomClock);
+
+            class QualityMenuItem extends MenuItem {
+                constructor(player, options) {
+                    super(player, options);
+                    this.levels = options.levels;
+                    this.level = options.level;
+                }
+                handleClick(event) {
+                    super.handleClick(event);
+                    for (let i = 0; i < this.levels.length; i++) {
+                        this.levels[i].enabled = (this.level === 'auto' || this.levels[i].id === this.level.id);
+                    }
+                    this.trigger('qualitySelected', this.level);
+                }
+            }
+
+            class CustomQualitySelector extends MenuButton {
+                constructor(player, options) {
+                    super(player, options);
+                    this.controlText('Settings');
+
+                    player.on('loadedmetadata', () => this.update());
+                    const qualityLevels = player.qualityLevels();
+                    qualityLevels.on('addqualitylevel', () => this.update());
+                }
+
+                createItems() {
+                    const items = [];
+                    const levels = this.player().qualityLevels();
+                    
+                    if (!levels || levels.length === 0) return items;
+
+                    const seen = new Set();
+                    for (let i = 0; i < levels.length; i++) {
+                        const level = levels[i];
+                        const label = level.height ? level.height + 'p' : Math.round(level.bitrate / 1000) + ' kbps';
+                        if (!seen.has(label)) {
+                            seen.add(label);
+                            const item = new QualityMenuItem(this.player(), {
+                                label: label,
+                                levels: levels,
+                                level: level,
+                                selected: false
+                            });
+                            items.push(item);
+                        }
+                    }
+                    
+                    items.sort((a, b) => b.options_.level.height - a.options_.level.height);
+
+                    const autoItem = new QualityMenuItem(this.player(), {
+                        label: 'Auto',
+                        levels: levels,
+                        level: 'auto',
+                        selected: true 
+                    });
+                    items.push(autoItem);
+
+                    items.forEach(item => {
+                        item.on('qualitySelected', () => {
+                            items.forEach(i => i.selected(false));
+                            item.selected(true);
+                        });
+                    });
+
+                    return items;
+                }
+
+                buildCSSClass() {
+                    return `vjs-custom-quality-selector ${super.buildCSSClass()}`;
+                }
+            }
+            videojs.registerComponent('CustomQualitySelector', CustomQualitySelector);
+        }
+
+        var serverList = [
+            "https://prod-cdn01-live.toffeelive.com/live/FIFA-2026-3/sst/0/master_1500.m3u8?hdntl=Expires=1783129192~_GO=Generated~URLPrefix=aHR0cHM6Ly9wcm9kLWNkbjAxLWxpdmUudG9mZmVlbGl2ZS5jb20~Signature=AeQsclC9PB1Xakwb9imTbouhZ2u5Ds84oYSWo2ybKMIZCc8t39jjQw6tdWXne5OwlT68xYlgffsffxAutpkcMOzokskM",
+            "http://198.195.239.50:8095/tsports/index.m3u8",
+            "http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8",
+            "https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8",
+            "https://ncdn.telewebion.ir/faratar/live/playlist.m3u8",
+            "https://d1jzu95oc8fgt3.cloudfront.net/FOX_Sports.m3u8",
+            "https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8",
+            "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8",
+            "https://nomawnoijl.gpcdn.net/akash/thunder/playlist.m3u8",
+            "https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8",
+            "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+            "https://bein-esp-xumo.amagi.tv/playlist.m3u8",
+            "https://next.badinan.xyz/nexttv/FHD/playlist.m3u8",
+            "http://198.195.239.50:8095/ptv/tracks-v1a1/mono.m3u8",
+            "http://198.195.239.50:8095/unt-s/video.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8",
+            "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1724/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8",
+            "http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8",
+            "https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8"
+        ];
+        
+        var currentServerIndex=0, isSwitching=!1;
+        
+        var player = videojs('live-player', {
+            html5: { vhs: { overrideNative: !0, allowCrossfileNaming: !0 } },
+            muted: !0,
+            controlBar: {
+                children: [
+                    'playToggle',
+                    'volumePanel',
+                    'progressControl',
+                    'customClock',           
+                    'subsCapsButton',        
+                    'customQualitySelector', 
+                    'pictureInPictureToggle',
+                    'fullscreenToggle'
+                ]
+            }
+        });
+        
+        player.ready(function(){
+            player.muted(!0);
+            player.play();
+        });
+
+        window.changeServer=function(e,n){
+            if(0===n&&0!==currentServerIndex)return void window.location.reload();
+            if(n === currentServerIndex) return;
+            
+            currentServerIndex=n, isSwitching=!1;
+            document.querySelectorAll('.server-btn').forEach(btn=>btn.classList.remove('active'));
+            var t=document.getElementById('btn-'+n);
+            if(t) t.classList.add('active');
+
+            if (n < 35) {
+                document.getElementById('fluid-wrapper').style.display = 'none';
+                document.getElementById('vjs-wrapper').style.display = 'block';
+                var fplayer = document.getElementById('fluid-player');
+                if(fplayer && fplayer.pause) fplayer.pause();
+                
+                player.error(null);
+                player.pause();
+                player.src({src:e,type:'application/x-mpegURL'});
+                player.load();
+                player.play().then(function(){isSwitching=!1}).catch(function(e){console.log("Autoplay failed:",e);setTimeout(function(){isSwitching=!1},2500)});
+            } else {
+                document.getElementById('vjs-wrapper').style.display = 'none';
+                document.getElementById('fluid-wrapper').style.display = 'block';
+                player.pause();
+                
+                initFluidPlayer(e);
+                isSwitching = !1;
+            }
+        };
+
+        player.on('error',function(){
+            if(isSwitching)return;
+            var e=currentServerIndex+1;
+            e<serverList.length&&(isSwitching=!0,setTimeout(function(){changeServer(serverList[e],e)},3e3))
+        });
+
+        const srvBox = document.querySelector('.server-box');
+        const srvToggle = document.querySelector('.server-toggle-btn');
+
+        document.addEventListener('fullscreenchange', () => {
+            if(document.fullscreenElement) {
+                if (srvBox) srvBox.style.display = 'none';
+                if (srvToggle) srvToggle.style.display = 'none';
+            } else {
+                if (srvBox) srvBox.style.display = 'flex';
+                if (srvToggle) srvToggle.style.display = 'flex';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
